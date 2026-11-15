@@ -6,12 +6,14 @@ Without it: Those indexers return nothing.
 
 ## How lemonfiber carries it
 
-This repository holds the adapter that speaks lemonfiber's `indexer.proxy@1`
-contract in front of Byparr: a Rust crate built on the core's adapter kit, into
-the image `ghcr.io/lemonfiber/byparr-adapter`, published from every commit on
-`main` and from each tag the release train cuts. The adapter asks Byparr through
-the FlareSolverr-compatible API Byparr serves. `plugin.toml` runs Byparr alone,
-from its own image, `ghcr.io/thephaseless/byparr`, pinned by tag and digest.
+lemonfiber installs Byparr with the adapter this repository holds, which speaks
+lemonfiber's `indexer.proxy@1` contract in front of Byparr: a Rust crate built
+on the core's adapter kit, into the image `ghcr.io/lemonfiber/byparr-adapter`,
+published from every commit on `main` and from each tag the release train cuts.
+lemonfiber asks Byparr through this adapter alone, and the adapter asks Byparr
+through the FlareSolverr-compatible API Byparr serves. The indexer fetches through
+Byparr itself, in that API, which Byparr's `native` names. Byparr's image is its own,
+`ghcr.io/thephaseless/byparr`, pinned by tag and digest.
 
 ## The fence
 
@@ -57,6 +59,7 @@ hands it to nobody, so the loader fetches nothing for anybody.
 | `Cargo.toml`, `src/` | The adapter, built on `lemonfiber-adapter-kit` |
 | `Dockerfile` | The adapter's image |
 | `recordings/byparr/` | The responses its proofs are held to |
+| `conformance/indexer.proxy@1/` | The adapter's answer to every case of the contract |
 | `targets.toml` | The lemonfiber its checks run against |
 | `proofs.json` | What those checks said, committed |
 | `status.toml` | The requirements this repository holds its part of |

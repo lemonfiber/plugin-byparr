@@ -15,8 +15,9 @@ that stands in for FlareSolverr where `F14-R31` proves `indexer.proxy` by a
 substitute. The adapter is the Rust crate at the root, built on
 `lemonfiber-adapter-kit` from the core at the commit `Cargo.toml` pins, into the
 image the `Dockerfile` builds. `release.yml` publishes that image from every
-commit on `main` and from the train's tag. `plugin.toml` runs Byparr alone, and
-its proof's recording is Byparr's own answer.
+commit on `main` and from the train's tag. `plugin.toml` runs Byparr behind that
+adapter, which provides `indexer.proxy`; lemonfiber asks Byparr through it alone,
+and the indexer fetches through Byparr itself.
 
 The adapter asks Byparr through the FlareSolverr-compatible API Byparr serves:
 `POST /v1` with `request.get` to fetch a page, and `/openapi.json`, which Byparr
@@ -28,10 +29,12 @@ answers without fetching anything, to tell whether it answers.
   configuration directory, the settings and the journal keep their names.
 - **A substitute, not a move in place.** Byparr declares no `replaces`, and
   publishes its own port, 8192, beside FlareSolverr's 8191.
-- **No `native`.** The indexer's `indexer.proxy` ask names no API, so it reaches
-  the adapter that speaks the contract, never Byparr itself (`ARCH-R253`).
-  FlareSolverr declares none for the same reason.
-- **Its proofs' recordings sit under `recordings/byparr/`** (`ARCH-R271`).
+- **`native = "flaresolverr"` on Byparr.** Byparr serves the FlareSolverr API, so
+  the core tells the indexer Byparr in that API, under the tag that sends an
+  indexer site through it (`ARCH-R428`). lemonfiber's own calls reach the adapter,
+  which speaks the contract (`ARCH-R253`).
+- **Its proofs' recordings sit under `recordings/byparr/`**, and the adapter's
+  conformance cases under `conformance/indexer.proxy@1/` (`ARCH-R271`).
 - **Every service declares `reaches` and `asks_for`** (`ARCH-R270`).
 - **The reader is spec's `first-party-plugin` workflow's,** and lemonfiber
   records the recordings itself. There is no Python here.
@@ -40,6 +43,8 @@ answers without fetching anything, to tell whether it answers.
 - **Byparr runs fenced, and the fence is the boundary.** Its service says
   `network = { fenced = true }`, so it runs inside the fence lemonfiber writes
   beside it, whose rules refuse every private address and the host's own.
+  `tests/manifest.rs` refuses a manifest whose `indexer.proxy` service, or the
+  service it fronts, is not fenced.
 - **Byparr's page loader answers nobody.** Byparr's `POST /load` fetches pages as
   `POST /v1` does and answers anybody unless `OWUI_API_KEY` is set, so lemonfiber
   mints `loader-key` into it before Byparr first starts and hands it to nobody

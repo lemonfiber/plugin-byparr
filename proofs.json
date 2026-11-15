@@ -7,6 +7,12 @@
       "kind": "proof",
       "outcome": "passed",
       "detail": ""
+    },
+    {
+      "id": "byparr.loader-guarded",
+      "kind": "proof",
+      "outcome": "passed",
+      "detail": ""
     }
   ]
 }
