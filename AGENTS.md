@@ -27,8 +27,11 @@ answers without fetching anything, to tell whether it answers.
 
 - **The plugin id is the service's id** (`ARCH-R266`). The container, the
   configuration directory, the settings and the journal keep their names.
-- **A substitute, not a move in place.** Byparr declares no `replaces`, and
-  publishes its own port, 8192, beside FlareSolverr's 8191.
+- **A substitute, not a move in place.** Byparr declares no `replaces`.
+- **Byparr publishes no port on the host.** Only the adapter and the indexer reach
+  it, on the stack's network, so nothing on the machine asks it for a page past
+  the adapter's screen. The fence keeps every connection it makes, redirects
+  included, off the machine, the home network and the stack's own services.
 - **`native = "flaresolverr"` on Byparr.** Byparr serves the FlareSolverr API, so
   the core tells the indexer Byparr in that API, under the tag that sends an
   indexer site through it (`ARCH-R428`). lemonfiber's own calls reach the adapter,
