@@ -35,7 +35,9 @@ async fn serve(settings: &Settings) -> Result<(), String> {
     let solver = Byparr::new(
         Arc::new(web),
         settings.upstream.clone(),
-        Arc::new(lemonfiber_outward::resolve::Lookup),
+        Arc::new(byparr_adapter::resolving::Again(
+            lemonfiber_outward::resolve::Lookup,
+        )),
     );
     let listener = tokio::net::TcpListener::bind(&settings.listen)
         .await

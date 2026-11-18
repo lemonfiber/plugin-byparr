@@ -54,7 +54,9 @@ answers without fetching anything, to tell whether it answers.
   (`ARCH-R247`).
 - **The adapter screens every address first.** It is `http` or `https`, carries
   no user or password, names its host by a name rather than a number, and every
-  address that name resolves to passes `lemonfiber_outward`. Anything else is
+  address that name resolves to passes `lemonfiber_outward`. A name the resolver
+  cannot answer is asked again, as often and as far apart as `src/resolving.rs`
+  holds, before it is refused as unresolved. Anything else is
   refused naming the reason, never the address, before Byparr is asked, and what
   is handed over is the address as the screen read it. The browser follows
   redirects and resolves names again, so the screen is a first refusal and never
