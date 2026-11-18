@@ -15,11 +15,7 @@ pub const ADDRESS: &str = "http://byparr:8191";
 /// The upstream this adapter fronts, as its project names itself.
 pub const UPSTREAM: &str = "Byparr";
 
-/// The Byparr release this adapter's recordings were taken from.
-pub const RELEASE: &str = "3.1.1";
-
-/// The digest of the image that release's recordings were taken from.
-pub const DIGEST: &str = "sha256:c66fa161187b8fa527bfad7eefa2647ea1c553f77df68cbffd6fe83366d1787b";
+include!(concat!(env!("OUT_DIR"), "/fronted.rs"));
 
 /// What this adapter says it is: the contract it speaks and the release it supports.
 #[must_use]
