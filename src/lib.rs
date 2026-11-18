@@ -3,3 +3,4 @@
 
 pub mod adapter;
 pub mod byparr;
+pub mod resolving;
