@@ -175,6 +175,7 @@ impl Solving for Byparr {
                 headers: vec![(CONTENT_TYPE.to_owned(), JSON.to_owned())],
                 body: Some(body),
                 pinned: None,
+                deadline: None,
             })
             .await?;
         if !response.is_success() {
@@ -210,6 +211,7 @@ impl Solving for Byparr {
                 headers: Vec::new(),
                 body: None,
                 pinned: None,
+                deadline: None,
             })
             .await?;
         let described: Described = self.endpoint.decode(&response, "the API it describes")?;
