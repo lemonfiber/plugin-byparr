@@ -87,3 +87,32 @@ fn a_manifest_publishing_the_solver_on_the_host_is_refused() {
     assert_ne!(exposed, manifest());
     assert_eq!(published(&exposed), vec!["byparr".to_owned()]);
 }
+
+fn solver_env(manifest: &str) -> Option<toml::Table> {
+    let read: toml::Table = toml::from_str(manifest).ok()?;
+    read.get("service")?
+        .as_array()?
+        .iter()
+        .find(|service| service.get("id").and_then(toml::Value::as_str) == Some("byparr"))?
+        .get("env")?
+        .as_table()
+        .cloned()
+}
+
+#[test]
+fn the_browser_takes_the_house_s_zone_and_language_and_no_geoip_database() {
+    let env = solver_env(&manifest()).unwrap_or_default();
+    let setting = |name: &str| {
+        env.get(name)
+            .and_then(|value| value.get("setting"))
+            .and_then(toml::Value::as_str)
+            .map(str::to_owned)
+    };
+    assert_eq!(setting("BROWSER_TIMEZONE").as_deref(), Some("timezone"));
+    assert_eq!(setting("BROWSER_LOCALE").as_deref(), Some("locale"));
+    assert_eq!(
+        env.get("STEALTHFOX_GEOIP_MMDB")
+            .and_then(toml::Value::as_str),
+        Some("/nonexistent/geoip.mmdb")
+    );
+}
